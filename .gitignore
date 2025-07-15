@@ -1,0 +1,26 @@
+# Jupyter notebook checkpoints
+.ipynb_checkpoints/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# CSV or extracted datasets
+all_states_schemes_cleaned.csv
+
+# VSCode settings (optional)
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Virtual environments (if added later)
+env/
+venv/
+.venv/
+
+# Environment variables or API keys (if added later)
+.env
+*.env
+config.json
