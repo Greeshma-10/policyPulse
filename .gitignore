@@ -6,7 +6,7 @@ __pycache__/
 *.py[cod]
 
 # CSV or extracted datasets
-all_states_schemes_cleaned.csv
+schemes.csv
 
 # VSCode settings (optional)
 .vscode/

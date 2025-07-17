@@ -1,8 +1,0 @@
-{
-  "compilerOptions": {
-    "baseUrl": ".",                 // ✅ required for "paths" to work
-    "paths": {
-      "@/*": ["./*"]               // Allows you to import like '@/components/XYZ'
-    }
-  }
-}
