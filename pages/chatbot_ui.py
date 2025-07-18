@@ -60,8 +60,6 @@ if "messages" not in st.session_state:
 # --- Title ---
 st.markdown("<div class='center-heading'><h2>🧠 PolicyPulse Chat</h2></div>", unsafe_allow_html=True)
 
-
-
 # --- Chat messages display ---
 chat_box = st.empty()
 with chat_box.container():
@@ -90,19 +88,15 @@ with chat_box.container():
     </script>
 """, unsafe_allow_html=True)
 
-
 # --- Input box ---
 with st.container():
-    # Create form without pre-filled value
-    with st.form(key="chat_form", clear_on_submit=True):  # <- THIS LINE CLEARS INPUT AUTOMATICALLY
+    with st.form(key="chat_form", clear_on_submit=True):
         user_input = st.text_input("Type your message...", key="chat_input", label_visibility="collapsed")
         submit = st.form_submit_button("Send")
 
         if submit and user_input.strip():
-            # Save user message
             st.session_state.messages.append({"role": "user", "content": user_input})
 
-            # Send request to backend
             try:
                 res = requests.post("http://127.0.0.1:5000/chat", json={"message": user_input})
                 if res.status_code == 200:
@@ -112,8 +106,5 @@ with st.container():
             except Exception as e:
                 bot_reply = f"API Error: {str(e)}"
 
-            # Save bot response
             st.session_state.messages.append({"role": "bot", "content": bot_reply})
-
-            # Force rerun
             st.rerun()

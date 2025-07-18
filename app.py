@@ -128,9 +128,10 @@ if st.button("🎯 Get Scheme Recommendations"):
                         <b>Benefit:</b> {row['Benefit']}
                     </div>
                 """, unsafe_allow_html=True)
-st.page_link("pages/chatbot_ui.py", label="💬 Open Chatbot Assistant", icon="🤖")
 
+# ✅ Link to chatbot (already handled correctly by you!)
+st.page_link("pages/chatbot_ui.py", label="💬 Open Chatbot Assistant", icon="🤖")
 
 # Footer
 st.markdown("---")
-st.caption('<div style="color:black">"Built with ❤️ by Greeshma | Powered by Streamlit"</div>',unsafe_allow_html=True)
+st.caption('<div style="color:black">"Built with ❤️ by Greeshma | Powered by Streamlit"</div>', unsafe_allow_html=True)

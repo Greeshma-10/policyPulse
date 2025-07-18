@@ -1,22 +1,28 @@
 from flask import Flask, request, jsonify
-import google.generativeai as genai
-import os
 from flask_cors import CORS
 from dotenv import load_dotenv
+import os
 
-# Load environment variables from .env file
+# LangChain + Gemini
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_core.messages import HumanMessage
+from langchain_core.output_parsers import StrOutputParser
+
+# Load environment variables
 load_dotenv()
 
-# Initialize Flask app
 app = Flask(__name__)
 CORS(app)
 
-# Get API key from environment
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-genai.configure(api_key=GEMINI_API_KEY)
 
-# Load Gemini model
-model = genai.GenerativeModel('gemini-1.5-flash-latest')
+# LangChain model setup
+llm = ChatGoogleGenerativeAI(
+    model="gemini-1.5-flash",
+    google_api_key=GEMINI_API_KEY,
+    temperature=0.3
+)
+parser = StrOutputParser()
 
 @app.route('/chat', methods=['POST'])
 def chat():
@@ -24,8 +30,8 @@ def chat():
     user_message = data.get('message')
 
     try:
-        response = model.generate_content(user_message)
-        reply = response.text
+        response = llm.invoke([HumanMessage(content=user_message)])
+        reply = parser.invoke(response)
     except Exception as e:
         reply = f"Error: {str(e)}"
 
