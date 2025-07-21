@@ -1,35 +1,53 @@
 import streamlit as st
 import requests
+import re
 
 # --- Page config ---
 st.set_page_config(page_title="PolicyPulse Chatbot", layout="wide")
+
 st.markdown("""
     <style>
         body, .stApp {
             background-color: #FFEDF3;
+            font-family: 'Segoe UI', sans-serif;
         }
+
+        .chatbox {
+            max-height: 75vh;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
         .message-container {
             display: flex;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             width: 100%;
         }
+
         .sender {
             justify-content: flex-end;
         }
+
         .receiver {
             justify-content: flex-start;
         }
+
         .message-bubble {
             max-width: 70%;
-            padding: 10px 15px;
+            padding: 15px 20px;
             border-radius: 20px;
-            color: black;
             font-size: 16px;
+            font-weight: bold;
+            line-height: 1.6;
+            color: #000000;
+            white-space: pre-wrap;
         }
+
         .sender .message-bubble {
             background-color: #56DFCF;
             border-bottom-right-radius: 0;
         }
+
         .receiver .message-bubble {
             background-color: #ADEED9;
             border-bottom-left-radius: 0;
@@ -43,12 +61,17 @@ st.markdown("""
             padding: 10px 20px;
             background-color: #FFEDF3;
         }
+
         .input-box {
             width: 100%;
         }
+
         .center-heading h2 {
             text-align: center;
             color: #0ABAB5;
+            font-weight: 700;
+            font-size: 28px;
+            margin-bottom: 10px;
         }
     </style>
 """, unsafe_allow_html=True)
@@ -65,28 +88,27 @@ chat_box = st.empty()
 with chat_box.container():
     st.markdown('<div class="chatbox">', unsafe_allow_html=True)
     for msg in st.session_state.messages:
-        if msg["role"] == "user":
-            st.markdown(
-                f"""
-                <div class="message-container sender">
-                    <div class="message-bubble">{msg['content']}</div>
-                </div>
-                """, unsafe_allow_html=True
-            )
-        else:
-            st.markdown(
-                f"""
-                <div class="message-container receiver">
-                    <div class="message-bubble">{msg['content']}</div>
-                </div>
-                """, unsafe_allow_html=True
-            )
+        # Format bot reply to remove * and bold headers
+        content = msg["content"]
+        if msg["role"] == "bot":
+            content = re.sub(r"\*\*(.*?)\*\*", r"<b>\1</b>", content)  # Bold **text**
+            content = re.sub(r"\*(.*?)\*", r"<b>\1</b>", content)      # Bold *text*
+            content = re.sub(r"\n#+\s*(.*?)\n", r"\n<b>\1</b>\n", content)  # Bold headings if any
+
+        css_class = "sender" if msg["role"] == "user" else "receiver"
+        st.markdown(
+            f"""
+            <div class="message-container {css_class}">
+                <div class="message-bubble">{content}</div>
+            </div>
+            """, unsafe_allow_html=True
+        )
     st.markdown("</div>", unsafe_allow_html=True)
     st.markdown("""
     <script>
         window.scrollTo(0, document.body.scrollHeight);
     </script>
-""", unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
 
 # --- Input box ---
 with st.container():
