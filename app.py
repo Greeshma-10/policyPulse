@@ -73,6 +73,38 @@ st.markdown("""
         background-color: #068e8e;
         color: white;
     }
+
+    /* Floating chatbot icon */
+    .chatbot-float {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        z-index: 9999;
+    }
+
+    .chatbot-float .stButton button {
+        background-color: transparent;
+        border: none;
+        box-shadow: none;
+        padding: 0;
+    }
+
+    .chatbot-float .stMarkdown {
+        display: none; /* hides label container */
+    }
+
+    .chatbot-float img {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        transition: transform 0.2s ease;
+        cursor: pointer;
+    }
+
+    .chatbot-float img:hover {
+        transform: scale(1.1);
+    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -101,7 +133,7 @@ for col in ['Scheme Name', 'Eligibility', 'Benefit']:
                 keywords_set.add(word.lower())
 unique_keywords = sorted(keywords_set)
 
-# Custom labels with black text
+# Custom labels
 st.markdown('<div class="custom-label">Select your state (optional):</div>', unsafe_allow_html=True)
 state = st.selectbox("", [""] + unique_states)
 
@@ -129,8 +161,12 @@ if st.button("🎯 Get Scheme Recommendations"):
                     </div>
                 """, unsafe_allow_html=True)
 
-# ✅ Link to chatbot (already handled correctly by you!)
-st.page_link("pages/chatbot_ui.py", label="💬 Open Chatbot Assistant", icon="🤖")
+# Floating Chatbot Button (Styled)
+st.markdown("""
+    <a href="/chatbot_ui" target="_self" class="chatbot-float">
+        <img src="https://cdn-icons-png.flaticon.com/512/4712/4712027.png" alt="Chatbot">
+    </a>
+""", unsafe_allow_html=True)
 
 # Footer
 st.markdown("---")
