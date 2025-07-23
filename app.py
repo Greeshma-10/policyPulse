@@ -113,7 +113,7 @@ st.markdown('<div class="title">🧠 PolicyPulse</div>', unsafe_allow_html=True)
 st.markdown('<div class="subtitle">Find the best government schemes tailored to you</div>', unsafe_allow_html=True)
 st.markdown("")
 
-# Load data
+# Load scheme data
 @st.cache_data
 def load_scheme_data():
     return load_data("schemes.csv")
@@ -128,10 +128,10 @@ unique_states = sorted(df['State'].dropna().unique().tolist())
 keywords_set = set()
 for col in ['Scheme Name', 'Eligibility', 'Benefit']:
     for val in df[col].fillna(""):
-        for word in val.split():
+        for word in str(val).split(): # Ensure val is string before split
             if len(word) > 3:
                 keywords_set.add(word.lower())
-unique_keywords = sorted(keywords_set)
+unique_keywords = sorted(list(keywords_set)) # Convert set to list
 
 # Custom labels
 st.markdown('<div class="custom-label">Select your state (optional):</div>', unsafe_allow_html=True)
@@ -147,17 +147,17 @@ if st.button("🎯 Get Scheme Recommendations"):
     else:
         results = recommend_schemes(df, state, keyword)
 
-        if results.empty:
+        if not results: # Check if the list is empty
             st.info("No matching schemes found. Try different keywords or states.")
         else:
             st.success(f"Found {len(results)} scheme(s):")
-            for _, row in results.iterrows():
+            for scheme_data in results: # Iterate over the list of dictionaries
                 st.markdown(f"""
                     <div class="scheme-card">
-                        <h4>{row['Scheme Name']}</h4>
-                        <b>State:</b> {row['State']}<br>
-                        <b>Eligibility:</b> {row['Eligibility']}<br>
-                        <b>Benefit:</b> {row['Benefit']}
+                        <h4>{scheme_data['name']}</h4>
+                        <b>State:</b> {scheme_data['state']}<br>
+                        <b>Eligibility:</b> {scheme_data['eligibility']}<br>
+                        <b>Benefit:</b> {scheme_data['benefit']}
                     </div>
                 """, unsafe_allow_html=True)
 

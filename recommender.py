@@ -22,28 +22,30 @@ def recommend_schemes(df, state=None, keyword=None, top_n=5):
     if keyword:
         keyword = keyword.lower()
         df_filtered = df_filtered[
-            df_filtered['Scheme Name'].str.lower().str.contains(keyword) |
-            df_filtered['Eligibility'].str.lower().str.contains(keyword) |
-            df_filtered['Benefit'].str.lower().str.contains(keyword)
+            df_filtered['Scheme Name'].str.lower().str.contains(keyword, na=False) | # Added na=False for robustness
+            df_filtered['Eligibility'].str.lower().str.contains(keyword, na=False) |
+            df_filtered['Benefit'].str.lower().str.contains(keyword, na=False)
         ]
 
     if df_filtered.empty:
-        return ["No schemes found for the given criteria."]
+        return [] # Return an empty list if no schemes are found
 
     df_filtered["Eligibility"] = df_filtered["Eligibility"].apply(smart_truncate)
     df_filtered["Benefit"] = df_filtered["Benefit"].apply(smart_truncate)
 
     responses = []
     for _, row in df_filtered.head(top_n).iterrows():
-        scheme = (
-            f"📍 **{row['Scheme Name']}** ({row['State']})\n"
-            f"🔹 *Eligibility*: {row['Eligibility']}\n"
-            f"💡 *Benefit*: {row['Benefit']}\n"
-        )
-        responses.append(scheme)
+        # Return a dictionary with individual components
+        scheme_dict = {
+            "name": row['Scheme Name'],
+            "state": row['State'],
+            "eligibility": row['Eligibility'],
+            "benefit": row['Benefit']
+        }
+        responses.append(scheme_dict)
     return responses
 
-# Optional helper function to be called by chatbot
+# Optional helper function to be called by chatbot (no changes needed here unless you want to return dicts)
 def get_recommendations(state=None, keyword=None, top_n=5):
     df = load_data()
     return recommend_schemes(df, state, keyword, top_n)
