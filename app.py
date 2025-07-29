@@ -13,44 +13,42 @@ st.set_page_config(
 # --- Custom CSS Styling ---
 st.markdown("""
     <style>
-    /* Color Palette:
-       - Primary Blue: #2A6F97
-       - Accent Green: #4CAF50
-       - Background Light Grey: #F8F9FA
-       - Card Background: #FFFFFF
-       - Text Dark Grey: #343A40
-       - Text Medium Grey: #6C757D
+    /* New Color Palette (from https://colorhunt.co/palette/fffbde90d1ca129990096b68):
+        - Background: #FFFBDE
+        - Lighter Accent (selection/hover): #90D1CA
+        - Medium Accent (buttons, borders): #129990
+        - Primary Accent (headers, strong lines): #096B68
+
+        - Card Background: #FFFFFF (retained for contrast)
+        - Text Dark: #343A40 (retained for readability)
+        - Text Medium: #6C757D (retained for readability)
     */
 
     /* Overall App Background and Font */
     .stApp {
-        background-color: #F8F9FA;
-        font-family: 'Segoe UI', Arial, sans-serif;
-        color: #343A40;
+        background-color: #FFFBDE; /* New main background color */
+        font-family: 'Segoe UI', Arial, sans-serif; /* Consistent font */
+        color: #343A40; /* Consistent dark grey text */
     }
 
-    /* Target the main content container and remove default padding/margins - **REFINED** */
-    .css-1d391kg { /* This is a common class for the main content block (might vary slightly) */
+    /* Target the main content container and remove default padding/margins for true wide layout */
+    .css-1d391kg, .css-1dp5yy6, .css-1r6dm1x, .css-1sp8zjk { /* Common Streamlit wrappers for wide mode */
         padding-left: 0rem !important;
         padding-right: 0rem !important;
-        max-width: unset !important; /* Ensure no max-width on this parent container */
-    }
-    /* Addressed other possible Streamlit internal divs that might constrain width */
-    .css-1dp5yy6 { /* Another common main content wrapper */
-        max-width: unset !important;
-    }
-    .css-1r6dm1x { /* A div often wrapping columns */
-        max-width: unset !important;
+        max-width: unset !important; /* Ensure no max-width on these parent containers */
     }
 
     /* Header/Hero Section */
     .header-container {
-        background-color: #2A6F97;
+        background-color: #096B68; /* New primary accent for header background */
         padding: 50px 0;
         border-radius: 15px;
         margin-bottom: 40px;
         box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
         text-align: center;
+        width: calc(100% - 40px);
+        margin: 0 auto;
+        max-width: 1200px;
     }
 
     .header-title {
@@ -71,14 +69,17 @@ st.markdown("""
 
     /* Section Headers */
     h3 {
-        color: #2A6F97;
+        color: #096B68; /* New primary accent for section headers */
         font-weight: 700;
         font-size: 2em;
-        border-bottom: 3px solid #4CAF50;
+        border-bottom: 3px solid #129990; /* New medium accent for border */
         padding-bottom: 8px;
         margin-top: 50px;
         margin-bottom: 30px;
         text-align: left;
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     /* Custom Labels for Inputs */
@@ -90,13 +91,13 @@ st.markdown("""
         margin-bottom: 8px;
     }
 
-    /* --- DROPDOWN TEXT VISIBILITY --- */
+    /* --- DROPDOWN (Selectbox) Styling --- */
     div[data-baseweb="select"] * {
         color: #343A40 !important; /* Force all text inside to be dark */
     }
 
     div[data-baseweb="select"] > div {
-        border-radius: 8px;
+        border-radius: 10px;
         border: 1px solid #ced4da;
         background-color: #ffffff;
         box-shadow: inset 0 1px 3px rgba(0,0,0,0.06);
@@ -105,15 +106,15 @@ st.markdown("""
 
     div[data-baseweb="select"] > div:hover,
     div[data-baseweb="select"] > div:focus-within {
-        border-color: #4CAF50;
-        box-shadow: inset 0 1px 3px rgba(0,0,0,0.06), 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
+        border-color: #129990; /* New medium accent on hover/focus */
+        box-shadow: inset 0 1px 3px rgba(0,0,0,0.06), 0 0 0 0.2rem rgba(18, 153, 144, 0.25); /* Adjusted rgba based on new accent */
     }
 
     div[data-baseweb="select"] input[type="text"] {
         color: #343A40 !important;
         background-color: #ffffff !important;
         font-size: 1.05em;
-        padding: 10px 12px;
+        padding: 12px 15px;
     }
 
     div[data-baseweb="select"] input[type="text"]::placeholder {
@@ -124,7 +125,7 @@ st.markdown("""
         fill: #6C757D !important;
     }
 
-    div[data-baseweb="select"] ul {
+    div[data-baseweb="select"] ul { /* Dropdown options list */
         background-color: #ffffff !important;
         border: 1px solid #ced4da !important;
         border-radius: 8px !important;
@@ -139,19 +140,18 @@ st.markdown("""
     }
 
     div[data-baseweb="select"] li:hover {
-        background-color: #E6F0E6 !important;
-        color: #2A6F97 !important;
+        background-color: #90D1CA !important; /* New lighter accent on hover for options */
+        color: #096B68 !important; /* New primary accent text on hover */
     }
     div[data-baseweb="select"] li[aria-selected="true"] {
-        background-color: #D4EDDA !important;
-        color: #2A6F97 !important;
+        background-color: #90D1CA !important; /* New lighter accent for selected option */
+        color: #096B68 !important; /* New primary accent text for selected option */
         font-weight: 600;
     }
 
-
     /* Recommendation Button */
     .stButton>button {
-        background-color: #4CAF50;
+        background-color: #129990; /* New medium accent for button */
         color: white;
         border: none;
         padding: 15px 30px;
@@ -165,25 +165,24 @@ st.markdown("""
     }
 
     .stButton>button:hover {
-        background-color: #388E3C;
+        background-color: #096B68; /* New primary accent on hover */
         transform: translateY(-3px);
         box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
     }
 
-    /* Scheme Card Styling - **INCREASED SIZE** */
+    /* Scheme Card Styling */
     .scheme-card {
         background-color: #ffffff;
-        padding: 40px; /* Increased padding for more internal space */
+        padding: 30px;
         border-radius: 12px;
-        margin-bottom: 30px;
+        margin-bottom: 25px;
         box-shadow: 0 5px 15px rgba(0,0,0,0.08);
         color: #343A40;
         transition: transform 0.2s ease, box-shadow 0.2s ease;
-        border-left: 5px solid #2A6F97;
+        border-left: 5px solid #096B68; /* New primary accent left border */
         width: 100%;
-        min-height: 200px; /* Add a minimum height to cards */
-        min-width: 600px; /* Add a minimum width to cards, adjust as needed */
-        max-width: unset !important; /* Ensure no external max-width limits */
+        min-height: 180px;
+        max-width: 900px;
         margin-left: auto;
         margin-right: auto;
     }
@@ -194,16 +193,16 @@ st.markdown("""
     }
 
     .scheme-card h4 {
-        color: #2A6F97;
-        margin-bottom: 15px;
-        font-size: 2em; /* Slightly larger heading font */
+        color: #096B68; /* New primary accent for card headings */
+        margin-bottom: 12px;
+        font-size: 1.8em;
         font-weight: 700;
     }
 
     .scheme-card p, .scheme-card b {
         color: #6C757D;
-        line-height: 2; /* Increased line spacing for readability */
-        font-size: 1.1em; /* Slightly larger body font */
+        line-height: 1.8;
+        font-size: 1.05em;
     }
 
     /* Info/Success/Warning Messages */
@@ -212,7 +211,7 @@ st.markdown("""
         padding: 18px;
         margin-top: 25px;
         font-size: 1.1em;
-        max-width: unset !important; /* Ensure alerts can also be wide */
+        max-width: 900px;
         margin-left: auto;
         margin-right: auto;
     }
@@ -288,59 +287,58 @@ df = load_scheme_data()
 st.markdown("<h3>🔍 Find Your Ideal Scheme</h3>", unsafe_allow_html=True)
 
 # Use columns for a more organized input section
-col1, col2 = st.columns([1, 1])
+input_section_cols = st.columns([0.1, 0.8, 0.1])
+with input_section_cols[1]:
+    col1, col2 = st.columns([1, 1])
 
-with col1:
-    st.markdown('<div class="custom-label">Select your state (optional):</div>', unsafe_allow_html=True)
-    unique_states = sorted(df['State'].dropna().unique().tolist())
-    state = st.selectbox(" ", [""] + unique_states, key="state_select", label_visibility="collapsed")
+    with col1:
+        st.markdown('<div class="custom-label">Select your state (optional):</div>', unsafe_allow_html=True)
+        unique_states = sorted(df['State'].dropna().unique().tolist())
+        state = st.selectbox(" ", [""] + unique_states, key="state_select", label_visibility="collapsed")
 
-with col2:
-    st.markdown('<div class="custom-label">Select a keyword (optional):</div>', unsafe_allow_html=True)
-    # Extract keyword list
-    keywords_set = set()
-    for col in ['Scheme Name', 'Eligibility', 'Benefit']:
-        for val in df[col].fillna(""):
-            for word in str(val).lower().replace('.', '').replace(',', '').split():
-                if len(word) > 2:
-                    keywords_set.add(word)
-    unique_keywords = sorted(list(keywords_set))
-    keyword = st.selectbox(" ", [""] + unique_keywords, key="keyword_select", label_visibility="collapsed")
+    with col2:
+        st.markdown('<div class="custom-label">Select a keyword (optional):</div>', unsafe_allow_html=True)
+        keywords_set = set()
+        for col_name in ['Scheme Name', 'Eligibility', 'Benefit']:
+            for val in df[col_name].fillna(""):
+                for word in str(val).lower().replace('.', '').replace(',', '').split():
+                    if len(word) > 2:
+                        keywords_set.add(word)
+        unique_keywords = sorted(list(keywords_set))
+        keyword = st.selectbox(" ", [""] + unique_keywords, key="keyword_select", label_visibility="collapsed")
 
-# Centered button using a column trick
-st.markdown("") # Add some space
-search_button_col = st.columns([0.3, 0.4, 0.3])
-with search_button_col[1]:
-    if st.button("🎯 Get Scheme Recommendations"):
-        if not state and not keyword:
-            st.warning("Please select a state or keyword to get recommendations.")
-        else:
-            results = recommend_schemes(df, state, keyword)
-
-            if not results:
-                st.info("No matching schemes found. Try different keywords or states.")
+# Centered button
+with input_section_cols[1]:
+    st.markdown("")
+    search_button_col = st.columns([0.2, 0.6, 0.2])
+    with search_button_col[1]:
+        if st.button("🎯 Get Scheme Recommendations"):
+            if not state and not keyword:
+                st.warning("Please select a state or keyword to get recommendations.")
             else:
-                st.markdown(f"<h3>Results ({len(results)} Schemes)</h3>", unsafe_allow_html=True)
-                # Display results in a central column to give them almost full perceived width
-                # Slightly reduced side columns for even more width
-                results_column = st.columns([0.01, 0.98, 0.01])
-                with results_column[1]:
-                    for scheme_data in results:
-                        eligibility_text = scheme_data['eligibility'] if pd.notna(scheme_data['eligibility']) else 'N/A'
-                        benefit_text = scheme_data['benefit'] if pd.notna(scheme_data['benefit']) else 'N/A'
-                        st.markdown(f"""
-                            <div class="scheme-card">
-                                <h4>{scheme_data['name']}</h4>
-                                <b>State:</b> {scheme_data['state'] if pd.notna(scheme_data['state']) else 'N/A'}<br>
-                                <b>Eligibility:</b> {eligibility_text}<br>
-                                <b>Benefit:</b> {benefit_text}
-                            </div>
-                        """, unsafe_allow_html=True)
+                results = recommend_schemes(df, state, keyword)
+
+                if not results:
+                    st.info("No matching schemes found. Try different keywords or states.")
+                else:
+                    st.markdown(f"<h3>Results ({len(results)} Schemes)</h3>", unsafe_allow_html=True)
+                    inner_results_column = st.columns([0.01, 0.98, 0.01])
+                    with inner_results_column[1]:
+                        for scheme_data in results:
+                            eligibility_text = scheme_data['eligibility'] if pd.notna(scheme_data['eligibility']) else 'N/A'
+                            benefit_text = scheme_data['benefit'] if pd.notna(scheme_data['benefit']) else 'N/A'
+                            st.markdown(f"""
+                                <div class="scheme-card">
+                                    <h4>{scheme_data['name']}</h4>
+                                    <b>State:</b> {scheme_data['state'] if pd.notna(scheme_data['state']) else 'N/A'}<br>
+                                    <b>Eligibility:</b> {eligibility_text}<br>
+                                    <b>Benefit:</b> {benefit_text}
+                                </div>
+                                """, unsafe_allow_html=True)
 
 # --- Placeholder for "About Us" or "How it Works" ---
 st.markdown("<h3>💡 How PolicyPulse Works</h3>", unsafe_allow_html=True)
-# Display "How it Works" in a central column as well, using the wider column ratio
-how_it_works_col = st.columns([0.01, 0.98, 0.01]) # Use 98% width
+how_it_works_col = st.columns([0.01, 0.98, 0.01])
 with how_it_works_col[1]:
     st.markdown("""
         <div class="scheme-card">
@@ -350,7 +348,7 @@ with how_it_works_col[1]:
         </div>
     """, unsafe_allow_html=True)
 
-# --- Floating Chatbot Button (Styled) ---
+# --- Floating Chatbot Button ---
 st.markdown("""
     <a href="/chatbot_ui" target="_self" class="chatbot-float">
         <img src="https://cdn-icons-png.flaticon.com/512/4712/4712027.png" alt="Chatbot">
