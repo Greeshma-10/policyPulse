@@ -19,6 +19,7 @@ Thumbs.db
 env/
 venv/
 .venv/
+streamlit_venv/
 
 # Environment variables or API keys (if added later)
 .env
