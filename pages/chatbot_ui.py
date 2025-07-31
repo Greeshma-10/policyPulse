@@ -3,45 +3,9 @@ import requests
 import re
 import time
 
-# --- Page Configuration (MUST be at the very top and unconditional) ---
-# Set page title and layout for the chatbot page
-st.set_page_config(
-    page_title="PolicyPulse Chatbot",
-    layout="wide", # Or whatever layout you prefer for the chatbot
-    initial_sidebar_state="auto" # Allow sidebar to be open
-)
+# --- Page config ---
+st.set_page_config(page_title="PolicyPulse Chatbot", layout="wide")
 
-
-
-
-# --- Access Control Check ---
-# Check if the user is logged in. If not, display access denied message and stop.
-if 'logged_in' not in st.session_state or st.session_state['logged_in'] == False:
-    # Override page config for the "Access Denied" view
-    st.markdown("""
-        <style>
-        body, .stApp { background-color: #FFFBDE; font-family: 'Segoe UI', Arial, sans-serif; color: #343A40; }
-        .main .block-container { padding-top: 4rem; text-align: center; }
-        h2 { color: #096B68; margin-bottom: 20px; font-size: 2.5em; }
-        p { font-size: 1.1em; color: #6C757D; margin-bottom: 30px; }
-        </style>
-    """, unsafe_allow_html=True)
-    st.markdown("<h2>Access Denied</h2>", unsafe_allow_html=True)
-    st.markdown("<p>Please log in to use the Chatbot. Navigate to the 'PolicyPulse Access' page (usually the first page or '0_login.py') in the sidebar.</p>", unsafe_allow_html=True)
-    st.stop() # Stop execution of the rest of the page if not logged in
-
-# --- If logged in, display user-specific welcome in sidebar ---
-# This part runs only if the user is logged in due to the st.stop() above
-if 'name' in st.session_state and st.session_state['name']:
-    with st.sidebar:
-        st.markdown(f"**Welcome, {st.session_state['name']}!**")
-        # The logout button is typically handled on the login page's sidebar,
-        # but you could add one here if needed for convenience.
-
-# --- Main Chatbot Application Content (only runs if logged in) ---
-# Your main chatbot styling and logic starts here.
-# It was previously indented under 'else:', but now it runs directly
-# after the access check if the user is logged in.
 st.markdown("""
     <style>
     /* New Color Palette (from https://colorhunt.co/palette/fffbde90d1ca129990096b68):
@@ -95,16 +59,16 @@ st.markdown("""
     }
 
     .chatbox {
-        max-height: 65vh;
+        max-height: 65vh; /* Adjusted for header and input to provide scroll */
         overflow-y: auto;
-        padding: 20px;
+        padding: 20px; /* Padding inside chatbox */
         border-radius: 15px;
         background-color: transparent; /* Make background transparent */
         box-shadow: none; /* Remove shadow */
         margin: 0 auto;
         max-width: 900px;
-        border: none;
-        min-height: 0;
+        border: none; /* Remove border as well if you want it completely invisible when empty */
+        min-height: 0; /* Allow it to collapse if no content */
     }
 
     /* Scrollbar Styling */
@@ -125,7 +89,7 @@ st.markdown("""
 
     .message-container {
         display: flex;
-        margin-bottom: 18px;
+        margin-bottom: 18px; /* Space between messages */
         width: 100%;
         align-items: flex-end;
     }
@@ -148,7 +112,7 @@ st.markdown("""
         color: #343A40;
         white-space: pre-wrap;
         word-wrap: break-word;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        box-shadow: 0 1px 2px rgba(0,0,0,0.1); /* Keep shadows on individual bubbles */
         position: relative;
     }
 
@@ -196,11 +160,11 @@ st.markdown("""
         bottom: 0;
         padding: 20px 0;
         background-color: #FFFBDE; /* New main background color for input area */
-        border-top: 1px solid #e9ecef;
+        border-top: 1px solid #e9ecef; /* Keep subtle border */
         box-shadow: 0 -5px 15px rgba(0,0,0,0.03);
         margin-top: 20px;
         display: flex;
-        justify-content: center;
+        justify-content: center; /* Center the form horizontally */
         align-items: center;
         width: 100%;
     }
@@ -234,8 +198,8 @@ st.markdown("""
     }
 
     .stButton>button {
-        background-color: #129990 !important; /* New medium accent for send button */
-        color: white !important; /* Ensure text color is white */
+        background-color: #129990 !important; /* IMPORTANT: New medium accent for send button */
+        color: white !important; /* IMPORTANT: Ensure text color is white */
         border: none;
         padding: 14px 28px;
         border-radius: 10px;
@@ -247,7 +211,7 @@ st.markdown("""
     }
 
     .stButton>button:hover {
-        background-color: #096B68 !important; /* New primary accent on hover */
+        background-color: #096B68 !important; /* IMPORTANT: New primary accent on hover */
         transform: translateY(-2px);
         box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
     }
@@ -297,6 +261,7 @@ st.markdown("""
 # --- Session state ---
 if "messages" not in st.session_state:
     st.session_state.messages = []
+    # Add a welcome message if chat is new
     st.session_state.messages.append({"role": "bot", "content": "Hello! I'm PolicyPulse Chatbot, your AI assistant for government schemes. How can I help you today?"})
 
 # --- Title ---
