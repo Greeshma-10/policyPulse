@@ -37,7 +37,7 @@
 
 1. Clone the repository:
 ```bash
-git clone [your-repository-url]
+git clone https://github.com/Greeshma-10/policyPulse
 cd policyPulse
 ```
 
