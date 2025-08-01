@@ -374,11 +374,30 @@ else:
     with how_it_works_col[1]:
         st.markdown("""
             <div class="scheme-card">
-            <p>PolicyPulse simplifies your search for government schemes. We leverage advanced filtering and a smart recommendation system to connect you with the policies that truly matter to you. </p>
-            <p>Simply select your state (if applicable) and/or enter a keyword relevant to your interests (e.g., "education", "agriculture", "women empowerment", "housing", "health", "finance"). Click "Get Scheme Recommendations" to see tailored results instantly.</p>
+            <h4>Authentication System</h4>
+            <p>Our secure authentication system ensures your access is private and protected. You can easily register as a new user by providing a unique email and password. All passwords are securely hashed before being stored, so your information remains safe. Once logged in, you will have full access to PolicyPulse's features.</p>
+            
+            <h4>The Recommendation Engine</h4>
+            <p>PolicyPulse simplifies your search for government schemes by providing a powerful recommendation engine. You can search for schemes based on two primary criteria:
+            <ul>
+                <li><b>State:</b> Select your state to see a list of schemes that are applicable to your location.</li>
+                <li><b>Keyword:</b> Use the keyword search to find schemes related to specific topics like "education," "agriculture," "women empowerment," "housing," "health," or "finance."</li>
+            </ul>
+            By combining these filters, you can quickly narrow down your search and find schemes that are most relevant to you. The system is designed to provide you with tailored results instantly, saving you time and effort.</p>
+            
+            <h4>The PolicyPulse Chatbot</h4>
+            <p>For a more in-depth understanding of a specific scheme, our chatbot is here to help. Once you find a scheme of interest, you can use the chatbot to get more detailed information, such as:
+            <ul>
+                <li>Detailed benefits of the scheme.</li>
+                <li>Eligibility criteria in a conversational format.</li>
+                <li>Step-by-step instructions on how to apply.</li>
+            </ul>
+            The chatbot provides a friendly and interactive way to get all your questions answered, making complex government policies easy to understand.</p>
+
             <p>Our goal is to make government information accessible and easy to understand, helping you unlock the benefits you deserve.</p>
             </div>
         """, unsafe_allow_html=True)
+
 
     # --- Floating Chatbot Icon (Directs user to sidebar) ---
     st.markdown("""

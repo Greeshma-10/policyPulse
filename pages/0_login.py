@@ -3,6 +3,8 @@ import yaml
 from yaml.loader import SafeLoader
 import hashlib # For password hashing
 import uuid # For generating unique user IDs
+import time # For adding a small delay
+
 
 # --- Set Page Config for the Login Page ---
 st.set_page_config(
@@ -88,6 +90,27 @@ st.markdown("""
         transform: translateY(-2px);
         box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
     }
+            
+            /* Ensure form submit buttons also have the same style */
+    div[data-testid="stFormSubmitButton"] > button {
+        background-color: #129990 !important;
+        color: white !important;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 10px;
+        font-weight: bold;
+        font-size: 1.1em;
+        transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        margin-top: 15px;
+    }
+    /* Ensure form submit buttons on hover also have the same style */
+    div[data-testid="stFormSubmitButton"] > button:hover {
+        background-color: #096B68 !important;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    }
     /* Style for headings */
     h2 {
         color: #096B68; /* Primary accent for headings */
@@ -117,11 +140,29 @@ st.markdown("""
         max-width: 500px;
         margin-left: auto;
         margin-right: auto;
+        color: black;
     }
     /* Override alert text color for visibility */
+    /* Target specifically success messages */
+    div[data-testid="stAlert"] div[data-baseweb="alert"] > div > div > p {
+        color: #343A40 !important; /* Dark text for all alerts, including success */
+        font-weight: 500;
+    }
+    /* You had this before, keeping for general alert text.
+       The specific selector above should override for the main text. */
     .stAlert > div > div > p {
         color: #343A40 !important;
         font-weight: 500;
+    }
+
+
+    /* Additional style for the anchor point for scrolling */
+    #registration-form-anchor {
+        position: relative;
+        top: -80px; /* Adjust this value to set how far above the form the scroll stops */
+        visibility: hidden; /* Keep it hidden */
+        display: block; /* Ensure it takes up space if needed for positioning */
+        height: 1px; /* Minimal height */
     }
     </style>
 """, unsafe_allow_html=True)
@@ -155,6 +196,13 @@ if 'username' not in st.session_state:
     st.session_state['username'] = None
 if 'name' not in st.session_state:
     st.session_state['name'] = None
+if 'show_signup_form' not in st.session_state: # New session state for showing signup
+    st.session_state['show_signup_form'] = False
+if 'registration_success' not in st.session_state: # New session state for registration success message
+    st.session_state['registration_success'] = False
+if 'scroll_to_signup' not in st.session_state: # Flag to trigger scroll
+    st.session_state['scroll_to_signup'] = False
+
 
 # --- Custom Header Section (matches chatbot header) ---
 st.markdown(
@@ -172,33 +220,52 @@ if st.session_state['authentication_status'] is None or st.session_state['authen
     login_username = st.text_input("Username", key="login_username_input")
     login_password = st.text_input("Password", type="password", key="login_password_input")
 
-    if st.button("Login", key="login_button"):
-        if login_username in config['credentials']['usernames']:
-            user_data = config['credentials']['usernames'][login_username]
-            hashed_password_in_config = user_data.get('password') # 'password' key stores hashed password
-            name_in_config = user_data.get('name')
+    col1, col2 = st.columns(2) # Create two columns for buttons
+    with col1:
+        if st.button("Login", key="login_button"):
+            if login_username in config['credentials']['usernames']:
+                user_data = config['credentials']['usernames'][login_username]
+                hashed_password_in_config = user_data.get('password') # 'password' key stores hashed password
+                name_in_config = user_data.get('name')
 
-            if hashed_password_in_config and hash_password(login_password) == hashed_password_in_config:
-                st.session_state['authentication_status'] = True
-                st.session_state['logged_in'] = True
-                st.session_state['username'] = login_username
-                st.session_state['name'] = name_in_config
-                st.success(f'Welcome, {name_in_config}! You are now logged in.')
-                st.info("You can now navigate to PolicyPulse from the sidebar.")
-                st.rerun() # Rerun to update the page immediately
+                if hashed_password_in_config and hash_password(login_password) == hashed_password_in_config:
+                    st.session_state['authentication_status'] = True
+                    st.session_state['logged_in'] = True
+                    st.session_state['username'] = login_username
+                    st.session_state['name'] = name_in_config
+                    st.success(f'Welcome, {name_in_config}! You are now logged in.')
+                    st.info("You can now navigate to PolicyPulse from the sidebar.")
+                    st.rerun() # Rerun to update the page immediately
+                else:
+                    st.error('Username/password is incorrect')
             else:
                 st.error('Username/password is incorrect')
-        else:
-            st.error('Username/password is incorrect')
+    with col2:
+        # Add "Sign Up" button here
+        if st.button("Sign Up", key="signup_button"):
+            st.session_state['show_signup_form'] = True
+            st.session_state['registration_success'] = False # Reset success message
+            st.session_state['scroll_to_signup'] = True # Set the flag to scroll
+            # No rerun here immediately after setting the scroll flag.
+            # The script will naturally re-run because of the button click.
+
 elif st.session_state['authentication_status'] == True:
     st.success(f'Welcome, {st.session_state["name"]}! You are already logged in.')
     st.info("You can now navigate to PolicyPulse from the sidebar.")
 
 
 # --- Custom Registration Logic ---
-if st.session_state['authentication_status'] == False or st.session_state['authentication_status'] is None:
+# Display the anchor point for scrolling
+st.markdown('<div id="registration-form-anchor"></div>', unsafe_allow_html=True)
+
+if st.session_state['authentication_status'] == False or st.session_state['authentication_status'] is None or st.session_state['show_signup_form']:
     st.markdown("---")
     st.markdown("<h3>New User? Sign Up!</h3>", unsafe_allow_html=True)
+
+    # Display registration success message if applicable
+    if st.session_state['registration_success']:
+        st.success('User registered successfully! Please login.')
+        st.session_state['registration_success'] = False # Consume the message
 
     with st.form("registration_form"):
         new_name = st.text_input("Name", key="reg_name")
@@ -229,8 +296,10 @@ if st.session_state['authentication_status'] == False or st.session_state['authe
                     # Save updated config back to file
                     with open('config.yaml', 'w') as file:
                         yaml.dump(config, file, default_flow_style=False)
-                    st.success('User registered successfully! Please login.')
-                    st.rerun() # Rerun to clear form and show login
+                    
+                    st.session_state['registration_success'] = True # Set success flag
+                    st.session_state['show_signup_form'] = False # Hide the signup form after success
+                    st.rerun() # Rerun to display success message and clear form
                 except Exception as e:
                     st.error(f"Error during registration: {e}")
 
@@ -245,3 +314,21 @@ if st.session_state['logged_in']:
             st.session_state['name'] = None
             st.success("You have been logged out.")
             st.rerun() # Rerun to show login page
+
+# --- Conditional JavaScript for Scrolling (executed after all content is rendered) ---
+# Use a placeholder and a small delay for more reliable scrolling
+if st.session_state['scroll_to_signup']:
+    # Embed the JavaScript directly using st.markdown with a slight delay
+    # This delay helps ensure the DOM is fully updated before scrolling is attempted.
+    js_code = """
+    <script>
+        setTimeout(function() {
+            var element = document.getElementById("registration-form-anchor");
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }, 100); // 100ms delay
+    </script>
+    """
+    st.markdown(js_code, unsafe_allow_html=True)
+    st.session_state['scroll_to_signup'] = False # Reset the flag

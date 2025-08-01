@@ -9,6 +9,16 @@ credentials:
       id: ab1bd9e3-ab8b-4b05-97ec-06a4ca978a18
       name: gree
       password: 432e8704c5d054ea55a8a6bcf629ae25cadc099a4c8ba91604a885f631254974
+    prathi@email.com:
+      email: prathi@email.com
+      id: ef810aae-183d-4b4b-9afb-67c285b6d2ec
+      name: prathi
+      password: b3facc7a9a1b93f7122889ac415b953bdd7254a82876cd20266f55ba41caf07e
+    prathik@email.com:
+      email: prathik@email.com
+      id: 5f19d627-1ad1-4639-b005-62347159461a
+      name: prathik
+      password: 492674352816423d1e855ad2b5b1cd85c593e797ef919a0f2c2fdf4fe85191a9
 preauthorized:
   emails:
   - admin@policy.com
