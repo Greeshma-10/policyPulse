@@ -79,7 +79,7 @@ streamlit run app.py
 ```
 3. The app will open in your browser at: http://localhost:8501
 
-### 🛠️ Usage
+## 🛠️ Usage
 1. Login / Sign Up: First-time users can register via the sign-up form.
 
 2. Find a Scheme: Use dropdowns and search to filter schemes.
