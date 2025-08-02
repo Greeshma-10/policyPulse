@@ -4,6 +4,12 @@
 
 ---
 
+## 📸 Application Preview
+
+| Login & Registration | Main page | Scheme Recommender | Conversational Chatbot |
+| :---: | :---: | :---: | :---: |
+| ![Login Page](https://github.com/user-attachments/assets/5537376a-c928-45ff-a410-42ad6c4168bd) |![Main page](https://github.com/user-attachments/assets/89ba0c2a-2d0b-4b9a-97b0-7e912b9a24d5 ) | ![Scheme Recommender](https://github.com/user-attachments/assets/36486ac6-ec36-4555-9d38-92d7b781a3c6) | ![Chatbot Interface](https://github.com/user-attachments/assets/8289adb9-455e-42f4-980e-bb59cab7181b) |
+
 ## ✨ Features
 
 ### 🔐 Secure User Authentication
